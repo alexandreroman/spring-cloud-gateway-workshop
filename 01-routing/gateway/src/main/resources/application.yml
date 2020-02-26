@@ -1,0 +1,27 @@
+app:
+  services:
+    greetings: lb://routing-greetings
+    adder: lb://routing-adder
+    calc: lb://routing-calc
+  weather:
+    apiKey: 94ddc03728d84a582878531792772165
+    latitude: 48.8534
+    longitude: 2.3488
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        - uri: ${app.services.greetings}
+          predicates:
+            - Path=/api/greetings
+
+        - uri: ${app.services.adder}
+          predicates:
+            - Path=/api/adder
+
+eureka:
+  client:
+    # Speed up Netflix Eureka client updates (not production-ready!).
+    instanceInfoReplicationIntervalSeconds: 1
+    registryFetchIntervalSeconds: 1

@@ -1,0 +1,45 @@
+app:
+  services:
+    customers: lb://security-customers
+    items: lb://security-items
+    orders: lb://security-orders
+
+spring:
+  security:
+    oauth2:
+      client:
+        provider:
+          uaa:
+            issuer-uri: http://localhost:8090/uaa/oauth/token
+        registration:
+          login-client:
+            provider: uaa
+            client-id: login-client
+            client-secret: secret
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            scope: openid,profile,email,app.admin
+
+  cloud:
+    gateway:
+      routes:
+        - uri: ${app.services.customers}
+          predicates:
+            - Path=/api/customers,/api/customers/**
+
+        - uri: ${app.services.items}
+          predicates:
+            - Path=/api/items,/api/items/**
+
+        - uri: ${app.services.orders}
+          predicates:
+            - Path=/api/orders,/api/orders/**
+
+      default-filters:
+        - PreserveHostHeader
+        - TokenRelay
+
+eureka:
+  client:
+    # Speed up Netflix Eureka client updates (not production-ready!).
+    instanceInfoReplicationIntervalSeconds: 1
+    registryFetchIntervalSeconds: 1

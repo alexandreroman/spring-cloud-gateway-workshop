@@ -1,0 +1,41 @@
+app:
+  services:
+    people: lb://hrapp-people
+    monolith: http://localhost:8080
+
+server:
+  port: ${PORT:8081}
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: people
+          uri: ${app.services.people}
+          predicates:
+            - Path=/api/people
+            - Weight=people-legacy, 90
+
+        - id: people-legacy
+          uri: ${app.services.monolith}
+          predicates:
+            - Path=/api/people
+            - Weight=people-legacy, 10
+          filters:
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter:
+                  replenish-rate: 5
+                  burst-capacity: 5
+                  requestedTokens: 1
+
+        - id: monolith
+          uri: ${app.services.monolith}
+          predicates:
+            - Path=/**
+
+eureka:
+  client:
+    # Speed up Netflix Eureka client updates (not production-ready!).
+    instanceInfoReplicationIntervalSeconds: 1
+    registryFetchIntervalSeconds: 1

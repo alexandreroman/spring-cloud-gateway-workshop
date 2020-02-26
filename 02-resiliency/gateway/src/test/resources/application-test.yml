@@ -1,0 +1,12 @@
+app:
+  services:
+    greetings: http://localhost:12000
+    time-v1: http://localhost:12001
+    time-v2: http://localhost:12002
+
+eureka:
+  client:
+    enabled: false
+ribbon:
+  eureka:
+    enabled: false

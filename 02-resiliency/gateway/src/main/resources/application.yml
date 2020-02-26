@@ -1,0 +1,62 @@
+app:
+  circuitbreaker:
+    timeout: 2s
+  services:
+    greetings: lb://resiliency-greetings
+    time-v1: lb://resiliency-time-1
+    time-v2: lb://resiliency-time-2
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: greetings
+          uri: ${app.services.greetings}
+          predicates:
+            - Path=/api/greetings
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: greetings-circuitbreaker
+                fallbackUri: forward:/api/fallback/greetings
+
+        - id: greetings-slow
+          uri: ${app.services.greetings}
+          predicates:
+            - Path=/api/greetings-slow
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: greetings-circuitbreaker
+                fallbackUri: forward:/api/fallback/greetings-slow
+
+        - id: greeting-ratelimiting
+          uri: ${app.services.greetings}
+          predicates:
+            - Path=/api/greetings-ratelimiting
+          filters:
+            - RewritePath=/api/greetings-ratelimiting(?<segment>.*),/api/greetings$\{segment}
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter:
+                  replenish-rate: 5
+                  burst-capacity: 5
+                  requestedTokens: 1
+
+        - id: time-v1
+          uri: ${app.services.time-v1}
+          predicates:
+            - Path=/api/time
+            - Weight=time, 90
+
+        - id: time-v2
+          uri: ${app.services.time-v2}
+          predicates:
+            - Path=/api/time
+            - Weight=time, 10
+
+eureka:
+  client:
+    # Speed up Netflix Eureka client updates (not production-ready!).
+    instanceInfoReplicationIntervalSeconds: 1
+    registryFetchIntervalSeconds: 1

@@ -1,0 +1,20 @@
+server:
+  port: ${PORT:0}
+
+spring:
+  data:
+    rest:
+      base-path: /api
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8090/uaa/oauth/token
+
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}

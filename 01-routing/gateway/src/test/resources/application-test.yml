@@ -1,0 +1,12 @@
+app:
+  services:
+    greetings: http://localhost:12000
+    adder: http://localhost:12001
+    calc: http://localhost:12002
+
+eureka:
+  client:
+    enabled: false
+ribbon:
+  eureka:
+    enabled: false

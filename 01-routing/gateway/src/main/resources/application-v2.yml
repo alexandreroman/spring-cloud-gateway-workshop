@@ -1,0 +1,27 @@
+app:
+  apiVersion: 2
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        - uri: ${app.services.greetings}
+          predicates:
+            - Path=/api/greetings
+
+        - uri: ${app.services.calc}
+          predicates:
+            - Path=/api/adder
+          filters:
+            - RewritePath=/api/adder(?<segment>.*),/api/calc/add$\{segment}
+
+        - uri: ${app.services.calc}
+          predicates:
+            - Path=/api/calc/**
+
+        - uri: https://api.darksky.net
+          predicates:
+            - Path=/api/weather
+          filters:
+            - RewritePath=/api/weather, /forecast/${app.weather.apiKey}/${app.weather.latitude}%2C${app.weather.longitude}?exclude=minutely%2Chourly%2Cdaily%2Calerts%2Cflags&units=si
+            - AddResponseHeader=X-Api-Version, ${app.apiVersion}
