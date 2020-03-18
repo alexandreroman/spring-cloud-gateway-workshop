@@ -1,0 +1,42 @@
+---
+applications:
+  - name: routing-adder
+    path: adder/target/routing-adder.jar
+    no-route: true
+    health-check-type: http
+    health-check-http-endpoint: /actuator/health
+    services:
+      - service-registry
+    env:
+      JBP_CONFIG_OPEN_JDK_JRE: '{ jre: { version: 11.+ } }'
+
+  - name: routing-calc
+    path: calc/target/routing-calc.jar
+    no-route: true
+    health-check-type: http
+    health-check-http-endpoint: /actuator/health
+    services:
+      - service-registry
+    env:
+      JBP_CONFIG_OPEN_JDK_JRE: '{ jre: { version: 11.+ } }'
+
+  - name: routing-greetings
+    path: greetings/target/routing-greetings.jar
+    no-route: true
+    health-check-type: http
+    health-check-http-endpoint: /actuator/health
+    services:
+      - service-registry
+    env:
+      JBP_CONFIG_OPEN_JDK_JRE: '{ jre: { version: 11.+ } }'
+
+  - name: routing-gateway
+    path: gateway/target/routing-gateway.jar
+    random-route: true
+    health-check-type: http
+    health-check-http-endpoint: /actuator/health
+    services:
+      - service-registry
+    env:
+      SPRING_PROFILES_ACTIVE: cloud,v2
+      JBP_CONFIG_OPEN_JDK_JRE: '{ jre: { version: 11.+ } }'

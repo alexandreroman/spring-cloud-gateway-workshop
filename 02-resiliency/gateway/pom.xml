@@ -106,4 +106,30 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>pivotal</id>
+            <properties>
+                <spring-cloud-services.version>3.1.1.RELEASE</spring-cloud-services.version>
+            </properties>
+            <dependencyManagement>
+                <dependencies>
+                    <dependency>
+                        <groupId>io.pivotal.spring.cloud</groupId>
+                        <artifactId>spring-cloud-services-dependencies</artifactId>
+                        <version>${spring-cloud-services.version}</version>
+                        <type>pom</type>
+                        <scope>import</scope>
+                    </dependency>
+                </dependencies>
+            </dependencyManagement>
+            <dependencies>
+                <dependency>
+                    <groupId>io.pivotal.spring.cloud</groupId>
+                    <artifactId>spring-cloud-services-starter-service-registry</artifactId>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
 </project>

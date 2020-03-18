@@ -1,0 +1,51 @@
+---
+applications:
+  - name: resiliency-greetings
+    path: greetings/target/resiliency-greetings.jar
+    no-route: true
+    health-check-type: http
+    health-check-http-endpoint: /actuator/health
+    services:
+      - service-registry
+    env:
+      SPRING_PROFILES_ACTIVE: cloud
+      JBP_CONFIG_SPRING_AUTO_RECONFIGURATION: '{enabled: false}'
+      JBP_CONFIG_OPEN_JDK_JRE: '{ jre: { version: 11.+ } }'
+
+  - name: resiliency-time-v1
+    path: time/target/resiliency-time.jar
+    no-route: true
+    health-check-type: http
+    health-check-http-endpoint: /actuator/health
+    services:
+      - service-registry
+    env:
+      SPRING_PROFILES_ACTIVE: cloud
+      JBP_CONFIG_SPRING_AUTO_RECONFIGURATION: '{enabled: false}'
+      JBP_CONFIG_OPEN_JDK_JRE: '{ jre: { version: 11.+ } }'
+
+  - name: resiliency-time-v2
+    path: time/target/resiliency-time.jar
+    no-route: true
+    health-check-type: http
+    health-check-http-endpoint: /actuator/health
+    services:
+      - service-registry
+    env:
+      APP_VERSION: 2
+      SPRING_PROFILES_ACTIVE: cloud
+      JBP_CONFIG_SPRING_AUTO_RECONFIGURATION: '{enabled: false}'
+      JBP_CONFIG_OPEN_JDK_JRE: '{ jre: { version: 11.+ } }'
+
+  - name: resiliency-gateway
+    path: gateway/target/resiliency-gateway.jar
+    random-route: true
+    health-check-type: http
+    health-check-http-endpoint: /actuator/health
+    services:
+      - service-registry
+      - redis
+    env:
+      SPRING_PROFILES_ACTIVE: cloud
+      JBP_CONFIG_SPRING_AUTO_RECONFIGURATION: '{enabled: false}'
+      JBP_CONFIG_OPEN_JDK_JRE: '{ jre: { version: 11.+ } }'

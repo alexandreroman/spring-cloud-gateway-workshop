@@ -1,0 +1,6 @@
+spring:
+  cloud:
+    services:
+      registrationMethod: direct
+  autoconfigure:
+    exclude: io.pivotal.spring.cloud.service.registry.EurekaInstanceAutoConfiguration
