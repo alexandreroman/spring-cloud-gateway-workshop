@@ -1,0 +1,43 @@
+---
+apiVersion: tanzu.vmware.com/v1
+kind: SpringCloudGatewayRouteConfig
+metadata:
+  name: gateway-v2
+spec:
+  routes:
+    - uri: http://greetings:8080
+      predicates:
+        - Path=/api/greetings
+      filters:
+        - StripPrefix=0
+
+    - uri: http://calc:8080
+      predicates:
+        - Path=/api/adder
+      filters:
+        - StripPrefix=0
+        - RewritePath=/api/adder(?<segment>.*),/api/calc/add$\{segment}
+
+    - uri: http://calc:8080
+      predicates:
+        - Path=/api/calc/**
+      filters:
+        - StripPrefix=0
+
+    - uri: https://api.darksky.net
+      predicates:
+        - Path=/api/weather
+      filters:
+        - StripPrefix=0
+        - RewritePath=/api/weather, /forecast/94ddc03728d84a582878531792772165/48.8534%2C2.3488?exclude=minutely%2Chourly%2Cdaily%2Calerts%2Cflags&units=si
+        - AddResponseHeader=X-Api-Version, v2
+---
+apiVersion: tanzu.vmware.com/v1
+kind: SpringCloudGatewayMapping
+metadata:
+  name: gateway-v2
+spec:
+  gatewayRef:
+    name: gateway
+  routeConfigRef:
+    name: gateway-v2

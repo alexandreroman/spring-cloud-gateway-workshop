@@ -1,9 +1,3 @@
-app:
-  services:
-    customers: lb://security-customers
-    items: lb://security-items
-    orders: lb://security-orders
-
 spring:
   security:
     oauth2:
@@ -22,24 +16,18 @@ spring:
   cloud:
     gateway:
       routes:
-        - uri: ${app.services.customers}
+        - uri: http://localhost:8081
           predicates:
             - Path=/api/customers,/api/customers/**
 
-        - uri: ${app.services.items}
+        - uri: http://localhost:8082
           predicates:
             - Path=/api/items,/api/items/**
 
-        - uri: ${app.services.orders}
+        - uri: http://localhost:8083
           predicates:
             - Path=/api/orders,/api/orders/**
 
       default-filters:
         - PreserveHostHeader
         - TokenRelay
-
-eureka:
-  client:
-    # Speed up Netflix Eureka client updates (not production-ready!).
-    instanceInfoReplicationIntervalSeconds: 1
-    registryFetchIntervalSeconds: 1

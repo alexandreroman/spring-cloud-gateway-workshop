@@ -3,19 +3,17 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.2.4.RELEASE</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <groupId>fr.alexandreroman.demos.scgworkshop.routing</groupId>
+        <artifactId>routing-parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
     </parent>
     <groupId>fr.alexandreroman.demos.scgworkshop.routing</groupId>
     <artifactId>routing-gateway</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
     <name>Routing - Gateway</name>
 
     <properties>
         <java.version>11</java.version>
-        <spring-cloud.version>Hoxton.SR2</spring-cloud.version>
+        <spring-cloud.version>2020.0.3</spring-cloud.version>
     </properties>
 
     <dependencies>
@@ -31,14 +29,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-ribbon</artifactId>
         </dependency>
 
         <dependency>
@@ -57,12 +47,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.junit.vintage</groupId>
-                    <artifactId>junit-vintage-engine</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
@@ -89,33 +73,16 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <imageName>${image.prefix}/scg-workshop-routing-gateway</imageName>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
             </plugin>
         </plugins>
     </build>
-
-    <profiles>
-        <profile>
-            <id>pivotal</id>
-            <properties>
-                <spring-cloud-services.version>2.2.3.RELEASE</spring-cloud-services.version>
-            </properties>
-            <dependencyManagement>
-                <dependencies>
-                    <dependency>
-                        <groupId>io.pivotal.spring.cloud</groupId>
-                        <artifactId>spring-cloud-services-dependencies</artifactId>
-                        <version>${spring-cloud-services.version}</version>
-                        <type>pom</type>
-                        <scope>import</scope>
-                    </dependency>
-                </dependencies>
-            </dependencyManagement>
-            <dependencies>
-                <dependency>
-                    <groupId>io.pivotal.spring.cloud</groupId>
-                    <artifactId>spring-cloud-services-starter-service-registry</artifactId>
-                </dependency>
-            </dependencies>
-        </profile>
-    </profiles>
 </project>

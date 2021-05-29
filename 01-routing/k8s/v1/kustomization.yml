@@ -1,0 +1,20 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: scg-workshop-routing
+resources:
+  - deployment.yml
+  - gateway.yml
+  - ingress.yml
+  - service.yml
+configMapGenerator:
+  - name: app
+    literals:
+      - server.port=8080
+images:
+  - name: alexandreroman/scg-workshop-routing-adder
+    newName: harbor.withtanzu.com/aro/scg-workshop-routing-adder
+    digest: sha256:890ca76e4930c252f8b41c75760859407b1c0511da95e54fc1576058930eaf82
+  - name: alexandreroman/scg-workshop-routing-greetings
+    newName: harbor.withtanzu.com/aro/scg-workshop-routing-greetings
+    digest: sha256:a92f137c674a6828e41059c4f49d6fd13ac300c13e3c45fdf9f1dd8cb530b4ea

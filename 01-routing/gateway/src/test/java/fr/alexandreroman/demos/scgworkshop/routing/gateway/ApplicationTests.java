@@ -40,7 +40,7 @@ class ApplicationTests {
 
     @Test
     void testGreetings() {
-        WireMockServer service = new WireMockServer(12000);
+        WireMockServer service = new WireMockServer(8082);
         try {
             service.start();
 
@@ -57,7 +57,7 @@ class ApplicationTests {
     @Test
     @Profile("!v2")
     void testAdder() {
-        WireMockServer service = new WireMockServer(12001);
+        WireMockServer service = new WireMockServer(8081);
         try {
             service.start();
             service.stubFor(get("/api/adder?a=3&b=4").willReturn(aResponse().withBody("7")));
@@ -80,7 +80,7 @@ class ApplicationV2Tests {
 
     @Test
     void testAdderV2() {
-        WireMockServer service = new WireMockServer(12002);
+        WireMockServer service = new WireMockServer(8083);
         try {
             service.start();
             service.stubFor(get("/api/calc/add?a=3&b=4").willReturn(aResponse().withBody("7")));
@@ -92,7 +92,7 @@ class ApplicationV2Tests {
 
     @Test
     void testCalc() {
-        WireMockServer service = new WireMockServer(12002);
+        WireMockServer service = new WireMockServer(8083);
         try {
             service.start();
             service.stubFor(get("/api/calc/add?a=3&b=4").willReturn(aResponse().withBody("7")));

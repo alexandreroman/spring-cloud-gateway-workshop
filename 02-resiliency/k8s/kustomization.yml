@@ -1,0 +1,24 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: scg-workshop-resiliency
+resources:
+  - deployment.yml
+  - gateway.yml
+  - ingress.yml
+  - service.yml
+configMapGenerator:
+  - name: app
+    literals:
+      - server.port=8080
+  - name: fallback
+    files:
+      - greetings-notfound.txt
+      - greetings-slow.txt
+images:
+  - name: alexandreroman/scg-workshop-resiliency-greetings
+    newName: harbor.withtanzu.com/aro/scg-workshop-resiliency-greetings
+    digest: sha256:85832a7fbe44c605a10ed075f3a6b3b0e2bf939637f1d056ffcb9570f4c0247d
+  - name: alexandreroman/scg-workshop-resiliency-time
+    newName: harbor.withtanzu.com/aro/scg-workshop-resiliency-time
+    digest: sha256:8b2e23160bff35dfce3d9fa7f2ef3dcdf4d725366aff543dbd9ae616183eb211

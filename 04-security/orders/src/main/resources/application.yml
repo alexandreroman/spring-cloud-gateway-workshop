@@ -1,7 +1,9 @@
 server:
-  port: ${PORT:0}
+  port: 8083
 
 spring:
+  application:
+    name: security-orders
   jpa:
     generate-ddl: true
     hibernate:
@@ -16,8 +18,4 @@ app:
   data:
     inject: true
   services:
-    items: //security-items
-
-eureka:
-  instance:
-    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+    items: http://localhost:8082

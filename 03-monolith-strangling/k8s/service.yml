@@ -1,0 +1,24 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hrapp
+spec:
+  ports:
+    - port: 8080
+      protocol: TCP
+      targetPort: http
+  selector:
+    tier: hrapp
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: people
+spec:
+  ports:
+    - port: 8080
+      protocol: TCP
+      targetPort: http
+  selector:
+    tier: people

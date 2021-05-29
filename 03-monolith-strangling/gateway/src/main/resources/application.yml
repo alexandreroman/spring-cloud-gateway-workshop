@@ -1,26 +1,21 @@
-app:
-  services:
-    people: lb://hrapp-people
-    monolith: http://localhost:8080
-
 server:
-  port: ${PORT:8081}
+  port: 8081
 
 spring:
   cloud:
     gateway:
       routes:
         - id: people
-          uri: ${app.services.people}
-          predicates:
-            - Path=/api/people
-            - Weight=people-legacy, 90
-
-        - id: people-legacy
-          uri: ${app.services.monolith}
+          uri: http://localhost:8082
           predicates:
             - Path=/api/people
             - Weight=people-legacy, 10
+
+        - id: people-legacy
+          uri: http://localhost:8080
+          predicates:
+            - Path=/api/people
+            - Weight=people-legacy, 90
           filters:
             - name: RequestRateLimiter
               args:
@@ -30,12 +25,6 @@ spring:
                   requestedTokens: 1
 
         - id: monolith
-          uri: ${app.services.monolith}
+          uri: http://localhost:8080
           predicates:
             - Path=/**
-
-eureka:
-  client:
-    # Speed up Netflix Eureka client updates (not production-ready!).
-    instanceInfoReplicationIntervalSeconds: 1
-    registryFetchIntervalSeconds: 1

@@ -1,0 +1,24 @@
+---
+$patch: delete
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: adder
+---
+$patch: delete
+apiVersion: v1
+kind: Service
+metadata:
+  name: adder
+---
+$patch: delete
+apiVersion: tanzu.vmware.com/v1
+kind: SpringCloudGatewayRouteConfig
+metadata:
+  name: gateway
+---
+$patch: delete
+apiVersion: tanzu.vmware.com/v1
+kind: SpringCloudGatewayMapping
+metadata:
+  name: gateway

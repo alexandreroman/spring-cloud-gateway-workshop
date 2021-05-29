@@ -1,8 +1,0 @@
-spring:
-  cloud:
-    services:
-      registrationMethod: direct
-
-eureka:
-  client:
-    enabled: false

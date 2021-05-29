@@ -40,7 +40,7 @@ class ApplicationTests {
 
     @Test
     void testGreetings() {
-        WireMockServer service = new WireMockServer(12000);
+        WireMockServer service = new WireMockServer(8081);
         try {
             service.start();
 
@@ -63,7 +63,7 @@ class ApplicationTests {
 
     @Test
     void testGreetingsSlow() {
-        WireMockServer service = new WireMockServer(12000);
+        WireMockServer service = new WireMockServer(8081);
         try {
             service.start();
             service.stubFor(get("/api/greetings-slow").willReturn(aResponse().withFixedDelay(3000).withBody("Hello world!")));
@@ -75,8 +75,8 @@ class ApplicationTests {
 
     @Test
     void testTime() {
-        WireMockServer time1 = new WireMockServer(12001);
-        WireMockServer time2 = new WireMockServer(12002);
+        WireMockServer time1 = new WireMockServer(8082);
+        WireMockServer time2 = new WireMockServer(8083);
         try {
             time1.start();
             time2.start();

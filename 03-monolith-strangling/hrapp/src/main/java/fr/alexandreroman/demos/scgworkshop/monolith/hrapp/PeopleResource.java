@@ -24,18 +24,26 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.List;
 
 @Path("/people")
 public class PeopleResource {
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final List<Person> people;
+    private final String hostName;
 
     public PeopleResource() {
         people = List.of(
                 new Person(1L, "Steve", "Rogers"),
                 new Person(2L, "Tony", "Stark")
         );
+        try {
+            hostName = InetAddress.getLocalHost().getCanonicalHostName();
+        } catch (UnknownHostException e) {
+            throw new IllegalStateException("Unexpected error", e);
+        }
     }
 
     @GET
@@ -44,6 +52,7 @@ public class PeopleResource {
         logger.info("Getting people from JavaEE app");
         return Response.ok(people)
                 .header("X-Source", "JavaEE")
+                .header("X-Host", hostName)
                 .build();
     }
 }

@@ -1,0 +1,42 @@
+---
+apiVersion: tanzu.vmware.com/v1
+kind: SpringCloudGateway
+metadata:
+  name: gateway
+---
+apiVersion: tanzu.vmware.com/v1
+kind: SpringCloudGatewayRouteConfig
+metadata:
+  name: gateway
+spec:
+  routes:
+    - uri: http://people:8080
+      predicates:
+        - Path=/api/people
+        - Weight=people-legacy,3
+      filters:
+        - StripPrefix=0
+
+    - uri: http://hrapp:8080
+      predicates:
+        - Path=/api/people
+        - Weight=people-legacy,7
+      filters:
+        - StripPrefix=0
+        - RateLimit=2,1s
+
+    - uri: http://hrapp:8080
+      predicates:
+        - Path=/**
+      filters:
+        - StripPrefix=0
+---
+apiVersion: tanzu.vmware.com/v1
+kind: SpringCloudGatewayMapping
+metadata:
+  name: gateway
+spec:
+  gatewayRef:
+    name: gateway
+  routeConfigRef:
+    name: gateway

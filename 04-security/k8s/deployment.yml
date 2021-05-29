@@ -1,0 +1,193 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: customers
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      tier: customers
+  template:
+    metadata:
+      labels:
+        tier: customers
+    spec:
+      containers:
+        - name: customers
+          image: alexandreroman/scg-workshop-security-customers
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: 512Mi
+            limits:
+              memory: 1Gi
+          env:
+            - name: SPRING_CONFIG_IMPORT
+              value: configtree:/etc/config/*/
+          ports:
+            - name: http
+              containerPort: 8080
+          livenessProbe:
+            httpGet:
+              port: http
+              path: /actuator/health/liveness
+            failureThreshold: 3
+            periodSeconds: 1
+          startupProbe:
+            httpGet:
+              port: http
+              path: /actuator/health/readiness
+            failureThreshold: 30
+            periodSeconds: 10
+          volumeMounts:
+            - mountPath: /etc/config/app
+              name: app
+      volumes:
+        - name: app
+          configMap:
+            name: app
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: items
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      tier: items
+  template:
+    metadata:
+      labels:
+        tier: items
+    spec:
+      containers:
+        - name: items
+          image: alexandreroman/scg-workshop-security-items
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: 512Mi
+            limits:
+              memory: 1Gi
+          env:
+            - name: SPRING_CONFIG_IMPORT
+              value: configtree:/etc/config/*/
+          ports:
+            - name: http
+              containerPort: 8080
+          livenessProbe:
+            httpGet:
+              port: http
+              path: /actuator/health/liveness
+            failureThreshold: 3
+            periodSeconds: 1
+          startupProbe:
+            httpGet:
+              port: http
+              path: /actuator/health/readiness
+            failureThreshold: 30
+            periodSeconds: 10
+          volumeMounts:
+            - mountPath: /etc/config/app
+              name: app
+      volumes:
+        - name: app
+          configMap:
+            name: app
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orders
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      tier: orders
+  template:
+    metadata:
+      labels:
+        tier: orders
+    spec:
+      containers:
+        - name: customers
+          image: alexandreroman/scg-workshop-security-orders
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: 512Mi
+            limits:
+              memory: 1Gi
+          env:
+            - name: SPRING_CONFIG_IMPORT
+              value: configtree:/etc/config/*/
+          ports:
+            - name: http
+              containerPort: 8080
+          livenessProbe:
+            httpGet:
+              port: http
+              path: /actuator/health/liveness
+            failureThreshold: 3
+            periodSeconds: 1
+          startupProbe:
+            httpGet:
+              port: http
+              path: /actuator/health/readiness
+            failureThreshold: 30
+            periodSeconds: 10
+          volumeMounts:
+            - mountPath: /etc/config/app
+              name: app
+      volumes:
+        - name: app
+          configMap:
+            name: app
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: uaa
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      tier: uaa
+  template:
+    metadata:
+      labels:
+        tier: uaa
+    spec:
+      containers:
+        - name: customers
+          image: alexandreroman/scg-workshop-security-uaa
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: 512Mi
+            limits:
+              memory: 1Gi
+          ports:
+            - name: http
+              containerPort: 8080
+          livenessProbe:
+            httpGet:
+              port: http
+              path: /uaa/actuator/health
+            failureThreshold: 3
+            periodSeconds: 1
+          startupProbe:
+            httpGet:
+              port: http
+              path: /uaa/actuator/health
+            failureThreshold: 30
+            periodSeconds: 10
+          volumeMounts:
+            - mountPath: /uaa
+              name: uaa
+      volumes:
+        - name: uaa
+          configMap:
+            name: uaa

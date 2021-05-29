@@ -1,17 +1,13 @@
 app:
   circuitbreaker:
     timeout: 2s
-  services:
-    greetings: lb://resiliency-greetings
-    time-v1: lb://resiliency-time-1
-    time-v2: lb://resiliency-time-2
 
 spring:
   cloud:
     gateway:
       routes:
         - id: greetings
-          uri: ${app.services.greetings}
+          uri: http://localhost:8081
           predicates:
             - Path=/api/greetings
           filters:
@@ -21,7 +17,7 @@ spring:
                 fallbackUri: forward:/api/fallback/greetings
 
         - id: greetings-slow
-          uri: ${app.services.greetings}
+          uri: http://localhost:8081
           predicates:
             - Path=/api/greetings-slow
           filters:
@@ -31,7 +27,7 @@ spring:
                 fallbackUri: forward:/api/fallback/greetings-slow
 
         - id: greeting-ratelimiting
-          uri: ${app.services.greetings}
+          uri: http://localhost:8081
           predicates:
             - Path=/api/greetings-ratelimiting
           filters:
@@ -44,19 +40,13 @@ spring:
                   requestedTokens: 1
 
         - id: time-v1
-          uri: ${app.services.time-v1}
+          uri: http://localhost:8082
           predicates:
             - Path=/api/time
             - Weight=time, 90
 
         - id: time-v2
-          uri: ${app.services.time-v2}
+          uri: http://localhost:8083
           predicates:
             - Path=/api/time
             - Weight=time, 10
-
-eureka:
-  client:
-    # Speed up Netflix Eureka client updates (not production-ready!).
-    instanceInfoReplicationIntervalSeconds: 1
-    registryFetchIntervalSeconds: 1

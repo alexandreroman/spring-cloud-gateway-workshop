@@ -1,0 +1,15 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: scg-workshop-routing-v2
+resources:
+  - ../v1
+  - deployment.yml
+  - gateway.yml
+  - service.yml
+patchesStrategicMerge:
+  - delete-v1.yml
+images:
+  - name: alexandreroman/scg-workshop-routing-calc
+    newName: harbor.withtanzu.com/aro/scg-workshop-routing-calc
+    digest: sha256:1dca5989c87c8f6934a86f407d852c9c62df63abf2ec6967f25d961af01c2a64

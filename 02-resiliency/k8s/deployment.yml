@@ -1,0 +1,195 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: greetings
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      tier: greetings
+  template:
+    metadata:
+      labels:
+        tier: greetings
+    spec:
+      containers:
+        - name: greetings
+          image: alexandreroman/scg-workshop-resiliency-greetings
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: 512Mi
+            limits:
+              memory: 1Gi
+          env:
+            - name: SPRING_CONFIG_IMPORT
+              value: configtree:/etc/config/*/
+          ports:
+            - name: http
+              containerPort: 8080
+          livenessProbe:
+            httpGet:
+              port: http
+              path: /actuator/health/liveness
+            failureThreshold: 3
+            periodSeconds: 1
+          startupProbe:
+            httpGet:
+              port: http
+              path: /actuator/health/readiness
+            failureThreshold: 30
+            periodSeconds: 10
+          volumeMounts:
+            - mountPath: /etc/config/app
+              name: app
+      volumes:
+        - name: app
+          configMap:
+            name: app
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: time-v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      tier: time-v1
+  template:
+    metadata:
+      labels:
+        tier: time-v1
+    spec:
+      containers:
+        - name: time-v1
+          image: alexandreroman/scg-workshop-resiliency-time
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: 512Mi
+            limits:
+              memory: 1Gi
+          env:
+            - name: SPRING_CONFIG_IMPORT
+              value: configtree:/etc/config/*/
+            - name: APP_VERSION
+              value: "1"
+          ports:
+            - name: http
+              containerPort: 8080
+          livenessProbe:
+            httpGet:
+              port: http
+              path: /actuator/health/liveness
+            failureThreshold: 3
+            periodSeconds: 1
+          startupProbe:
+            httpGet:
+              port: http
+              path: /actuator/health/readiness
+            failureThreshold: 30
+            periodSeconds: 10
+          volumeMounts:
+            - mountPath: /etc/config/app
+              name: app
+      volumes:
+        - name: app
+          configMap:
+            name: app
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: time-v2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      tier: time-v2
+  template:
+    metadata:
+      labels:
+        tier: time-v2
+    spec:
+      containers:
+        - name: time-v2
+          image: alexandreroman/scg-workshop-resiliency-time
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: 512Mi
+            limits:
+              memory: 1Gi
+          env:
+            - name: SPRING_CONFIG_IMPORT
+              value: configtree:/etc/config/*/
+            - name: APP_VERSION
+              value: "2"
+          ports:
+            - name: http
+              containerPort: 8080
+          livenessProbe:
+            httpGet:
+              port: http
+              path: /actuator/health/liveness
+            failureThreshold: 3
+            periodSeconds: 1
+          startupProbe:
+            httpGet:
+              port: http
+              path: /actuator/health/readiness
+            failureThreshold: 30
+            periodSeconds: 10
+          volumeMounts:
+            - mountPath: /etc/config/app
+              name: app
+      volumes:
+        - name: app
+          configMap:
+            name: app
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fallback
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      tier: fallback
+  template:
+    metadata:
+      labels:
+        tier: fallback
+    spec:
+      containers:
+        - name: fallback
+          image: bitnami/nginx:1.20.1
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: 256Mi
+            limits:
+              memory: 256Mi
+          ports:
+            - name: http
+              containerPort: 8080
+          livenessProbe:
+            httpGet:
+              port: http
+              path: /greetings-notfound.txt
+            periodSeconds: 1
+          startupProbe:
+            httpGet:
+              port: http
+              path: /greetings-notfound.txt
+            periodSeconds: 10
+          volumeMounts:
+            - mountPath: /app
+              name: fallback
+      volumes:
+        - name: fallback
+          configMap:
+            name: fallback

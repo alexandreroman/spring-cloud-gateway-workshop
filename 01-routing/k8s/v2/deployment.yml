@@ -1,0 +1,49 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: calc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      tier: calc
+  template:
+    metadata:
+      labels:
+        tier: calc
+    spec:
+      containers:
+        - name: calc
+          image: alexandreroman/scg-workshop-routing-calc
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: 512Mi
+            limits:
+              memory: 1Gi
+          env:
+            - name: SPRING_CONFIG_IMPORT
+              value: configtree:/etc/config/*/
+          ports:
+            - name: http
+              containerPort: 8080
+          livenessProbe:
+            httpGet:
+              port: http
+              path: /actuator/health/liveness
+            failureThreshold: 3
+            periodSeconds: 1
+          startupProbe:
+            httpGet:
+              port: http
+              path: /actuator/health/readiness
+            failureThreshold: 30
+            periodSeconds: 10
+          volumeMounts:
+            - mountPath: /etc/config/app
+              name: app
+      volumes:
+        - name: app
+          configMap:
+            name: app

@@ -25,6 +25,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 @SpringBootApplication
 public class Application {
     public static void main(String[] args) {
@@ -39,6 +42,11 @@ class GreetingsController {
     private String messageFallback;
     @Value("${app.message.pattern:Hello %s!}")
     private String messagePattern;
+    private final String localHostName;
+
+    private GreetingsController() throws UnknownHostException {
+        localHostName = InetAddress.getLocalHost().getCanonicalHostName();
+    }
 
     @GetMapping(value = "/api/greetings", produces = MediaType.TEXT_PLAIN_VALUE)
     String greetings(@RequestParam(value = "name", required = false) String name) {
@@ -54,6 +62,7 @@ class GreetingsController {
     }
 
     private String doGreetings(String name) {
-        return name == null ? messageFallback : String.format(messagePattern, name);
+        final var greetings = name == null ? messageFallback : String.format(messagePattern, name);
+        return String.format("%s (from %s)", greetings, localHostName);
     }
 }

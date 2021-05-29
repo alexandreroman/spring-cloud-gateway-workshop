@@ -1,0 +1,51 @@
+---
+apiVersion: tanzu.vmware.com/v1
+kind: SpringCloudGateway
+metadata:
+  name: gateway
+spec:
+  sso:
+    secret: sso-gateway
+---
+apiVersion: tanzu.vmware.com/v1
+kind: SpringCloudGatewayRouteConfig
+metadata:
+  name: gateway
+spec:
+  routes:
+    - uri: http://customers:8080
+      ssoEnabled: true
+      tokenRelay: true
+      predicates:
+        - Path=/api/customers,/api/customers/**
+      filters:
+        - StripPrefix=0
+        - PreserveHostHeader
+
+    - uri: http://items:8080
+      ssoEnabled: true
+      tokenRelay: true
+      predicates:
+        - Path=/api/items,/api/items/**
+      filters:
+        - StripPrefix=0
+        - PreserveHostHeader
+
+    - uri: http://orders:8080
+      ssoEnabled: true
+      tokenRelay: true
+      predicates:
+        - Path=/api/orders,/api/orders/**
+      filters:
+        - StripPrefix=0
+        - PreserveHostHeader
+---
+apiVersion: tanzu.vmware.com/v1
+kind: SpringCloudGatewayMapping
+metadata:
+  name: gateway
+spec:
+  gatewayRef:
+    name: gateway
+  routeConfigRef:
+    name: gateway

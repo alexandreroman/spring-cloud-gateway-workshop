@@ -1,0 +1,48 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: greetings
+spec:
+  ports:
+    - port: 8080
+      protocol: TCP
+      targetPort: http
+  selector:
+    tier: greetings
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: time-v1
+spec:
+  ports:
+    - port: 8080
+      protocol: TCP
+      targetPort: http
+  selector:
+    tier: time-v1
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: time-v2
+spec:
+  ports:
+    - port: 8080
+      protocol: TCP
+      targetPort: http
+  selector:
+    tier: time-v2
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fallback
+spec:
+  ports:
+    - port: 8080
+      protocol: TCP
+      targetPort: http
+  selector:
+    tier: fallback

@@ -35,12 +35,12 @@ class ApplicationTests {
     @Test
     void testGreetings() {
         assertThat(client.getForEntity("/api/greetings", String.class).getBody())
-                .isEqualTo("Hello world!");
+                .startsWith("Hello world!");
     }
 
     @Test
     void testGreetingsName() {
         assertThat(client.getForEntity("/api/greetings?name={name}", String.class, "Alex").getBody())
-                .isEqualTo("Hello Alex!");
+                .startsWith("Hello Alex!");
     }
 }

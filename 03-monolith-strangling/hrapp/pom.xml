@@ -2,9 +2,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>fr.alexandreroman.demos.scgworkshop.monolith</groupId>
+        <artifactId>monolith-parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
     <groupId>fr.alexandreroman.demos.scgworkshop.monolith</groupId>
     <artifactId>hrapp</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
     <packaging>war</packaging>
     <name>Monolith Strangling - HR App</name>
 
@@ -12,7 +16,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
-        <jersey.version>2.30.1</jersey.version>
+        <jersey.version>2.34</jersey.version>
     </properties>
 
     <dependencies>
@@ -51,7 +55,7 @@
             <plugins>
                 <plugin>
                     <artifactId>maven-war-plugin</artifactId>
-                    <version>3.2.3</version>
+                    <version>3.3.1</version>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -86,6 +90,25 @@
                                 </requireMavenVersion>
                             </rules>
                         </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>jib-maven-plugin</artifactId>
+                <version>3.0.0</version>
+                <configuration>
+                    <to>
+                        <image>${image.prefix}/scg-workshop-monolith-hrapp</image>
+                    </to>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>build-image</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>dockerBuild</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>

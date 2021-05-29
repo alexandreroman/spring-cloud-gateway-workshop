@@ -22,6 +22,7 @@ import org.springframework.boot.runApplication
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
+import java.net.InetAddress
 
 @SpringBootApplication
 class Application
@@ -33,22 +34,22 @@ fun main(args: Array<String>) {
 data class Person(val id: Long, val firstName: String, val lastName: String)
 
 @RestController
-class PeopleController(
-        private val people: List<Person> = createSampleData(),
-        private val pid: Long = ProcessHandle.current().pid()) {
+class PeopleController {
+    private val people: List<Person> = createSampleData()
+    private val hostName: String = InetAddress.getLocalHost().canonicalHostName
     private val logger = LoggerFactory.getLogger(javaClass)
 
     @GetMapping("/api/people")
     fun getPeople(): ResponseEntity<Any> {
-        logger.info("Getting people from Spring Boot app (pid={})", pid)
+        logger.info("Getting people from Spring Boot app")
         return ResponseEntity.ok()
-                .header("X-Source", "SpringBoot")
-                .header("X-PID", pid.toString())
-                .body(people)
+            .header("X-Source", "SpringBoot")
+            .header("X-Host", hostName)
+            .body(people)
     }
 }
 
 private fun createSampleData() = listOf<Person>(
-        Person(1L, "Steve", "Rogers"),
-        Person(2L, "Tony", "Stark")
+    Person(1L, "Steve", "Rogers"),
+    Person(2L, "Tony", "Stark")
 )

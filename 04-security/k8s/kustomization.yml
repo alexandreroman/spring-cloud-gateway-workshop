@@ -1,0 +1,40 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: scg-workshop-security
+resources:
+  - deployment.yml
+  - gateway.yml
+  - ingress.yml
+  - service.yml
+configMapGenerator:
+  - name: app
+    literals:
+      - server.port=8080
+      - spring.security.oauth2.resourceserver.jwt.issuer-uri=http://connect.shop.scg.withtanzu.com/uaa/oauth/token
+      - app.services.items=http://items:8080
+  - name: uaa
+    files:
+      - uaa.yml
+secretGenerator:
+  - name: sso-gateway
+    literals:
+      - scope=openid,profile,email,app.admin
+      - client-id=login-client
+      - client-secret=secret
+      - issuer-uri=http://connect.shop.scg.withtanzu.com/uaa/oauth/token
+generatorOptions:
+  disableNameSuffixHash: true
+images:
+  - name: alexandreroman/scg-workshop-security-customers
+    newName: harbor.withtanzu.com/aro/scg-workshop-security-customers
+    digest: sha256:64e319fc06c05f7e2a0474267ddb9496e8288d9305ac9e32762ca8fae91f3529
+  - name: alexandreroman/scg-workshop-security-items
+    newName: harbor.withtanzu.com/aro/scg-workshop-security-items
+    digest: sha256:5c8b17b73159a67804a3932b5b4d650ab1436cff528f2c32336b2c3ed399b837
+  - name: alexandreroman/scg-workshop-security-orders
+    newName: harbor.withtanzu.com/aro/scg-workshop-security-orders
+    digest: sha256:51e4306fc3875b7da3966f1afecb36c715a5ef7ed2eeba38c651ee66f2862b34
+  - name: alexandreroman/scg-workshop-security-uaa
+    newName: harbor.withtanzu.com/aro/scg-workshop-security-uaa
+    digest: sha256:cf7d3b877bf9d636f13bc33eed76a0f188e5a2bdaa183057ab78806a611e46c2

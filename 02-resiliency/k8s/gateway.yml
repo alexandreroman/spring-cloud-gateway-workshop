@@ -1,0 +1,64 @@
+---
+apiVersion: tanzu.vmware.com/v1
+kind: SpringCloudGateway
+metadata:
+  name: gateway
+---
+apiVersion: tanzu.vmware.com/v1
+kind: SpringCloudGatewayRouteConfig
+metadata:
+  name: gateway
+spec:
+  routes:
+    - uri: http://greetings:8080
+      predicates:
+        - Path=/api/greetings
+      filters:
+        - StripPrefix=0
+        - CircuitBreaker=greetings-circuitbreaker,forward:/fallback/greetings-notfound.txt
+
+    - uri: http://greetings:8080
+      predicates:
+        - Path=/api/greetings-slow
+      filters:
+        - StripPrefix=0
+        - CircuitBreaker=greetings-circuitbreaker,forward:/fallback/greetings-slow.txt
+
+    - uri: http://greetings:8080
+      predicates:
+        - Path=/api/greetings-ratelimiting
+      filters:
+        - StripPrefix=0
+        - RewritePath=/api/greetings-ratelimiting(?<segment>.*),/api/greetings$\{segment}
+        - RateLimit=1,1s
+
+    - uri: http://time-v1:8080
+      predicates:
+        - Path=/api/time
+        - Weight=time,9
+      filters:
+        - StripPrefix=0
+
+    - uri: http://time-v2:8080
+      predicates:
+        - Path=/api/time
+        - Weight=time,1
+      filters:
+        - StripPrefix=0
+
+    - uri: http://fallback:8080
+      predicates:
+        - Path=/fallback/**
+      filters:
+        - StripPrefix=0
+        - RewritePath=/fallback/(?<segment>.*),/$\{segment}
+---
+apiVersion: tanzu.vmware.com/v1
+kind: SpringCloudGatewayMapping
+metadata:
+  name: gateway
+spec:
+  gatewayRef:
+    name: gateway
+  routeConfigRef:
+    name: gateway

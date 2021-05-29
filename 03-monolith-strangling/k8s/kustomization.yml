@@ -1,0 +1,20 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: scg-workshop-monolith
+resources:
+  - deployment.yml
+  - gateway.yml
+  - ingress.yml
+  - service.yml
+configMapGenerator:
+  - name: app
+    literals:
+      - server.port=8080
+images:
+  - name: alexandreroman/scg-workshop-monolith-hrapp
+    newName: harbor.withtanzu.com/aro/scg-workshop-monolith-hrapp
+    digest: sha256:a89283ad3b8a34861f036f81980ccb3fd5dab8d15a0d2a5cad6b5b477dd2b9b0
+  - name: alexandreroman/scg-workshop-monolith-people
+    newName: harbor.withtanzu.com/aro/scg-workshop-monolith-people
+    digest: sha256:9fe32d85be2e83bd9bd74ab037b555084fb6019e2a1b7dcfd3dad15e667896a0

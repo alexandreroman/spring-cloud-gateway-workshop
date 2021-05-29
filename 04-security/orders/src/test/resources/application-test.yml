@@ -4,13 +4,6 @@ app:
   services:
     items: http://localhost:12345
 
-eureka:
-  client:
-    enabled: false
-ribbon:
-  eureka:
-    enabled: false
-
 logging:
   level:
     org:

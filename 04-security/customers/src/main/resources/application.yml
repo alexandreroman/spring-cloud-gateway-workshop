@@ -1,5 +1,5 @@
 server:
-  port: ${PORT:0}
+  port: 8081
 
 spring:
   security:
@@ -7,7 +7,3 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: http://localhost:8090/uaa/oauth/token
-
-eureka:
-  instance:
-    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
