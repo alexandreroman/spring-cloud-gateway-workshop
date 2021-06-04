@@ -14,7 +14,7 @@ spec:
         tier: hrapp
     spec:
       containers:
-        - name: greetings
+        - name: hrapp
           image: alexandreroman/scg-workshop-monolith-hrapp
           imagePullPolicy: IfNotPresent
           resources:
@@ -53,7 +53,7 @@ spec:
         tier: people
     spec:
       containers:
-        - name: time-v1
+        - name: people
           image: alexandreroman/scg-workshop-monolith-people
           imagePullPolicy: IfNotPresent
           resources:
