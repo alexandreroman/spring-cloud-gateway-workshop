@@ -12,9 +12,9 @@
     <name>Monolith Strangling - HR App - Gateway</name>
 
     <properties>
-        <java.version>11</java.version>
-        <kotlin.version>1.5.10</kotlin.version>
-        <spring-cloud.version>2020.0.3</spring-cloud.version>
+        <java.version>17</java.version>
+        <kotlin.version>1.6.21</kotlin.version>
+        <spring-cloud.version>2021.0.4</spring-cloud.version>
     </properties>
 
     <dependencies>
