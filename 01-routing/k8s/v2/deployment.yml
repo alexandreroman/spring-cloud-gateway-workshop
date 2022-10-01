@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: calc
-          image: alexandreroman/scg-workshop-routing-calc
+          image: ghcr.io/alexandreroman/scg-workshop-routing-calc
           imagePullPolicy: IfNotPresent
           resources:
             requests:

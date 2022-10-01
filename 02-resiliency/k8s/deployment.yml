@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: greetings
-          image: alexandreroman/scg-workshop-resiliency-greetings
+          image: ghcr.io/alexandreroman/scg-workshop-resiliency-greetings
           imagePullPolicy: IfNotPresent
           resources:
             requests:
@@ -64,7 +64,7 @@ spec:
     spec:
       containers:
         - name: time-v1
-          image: alexandreroman/scg-workshop-resiliency-time
+          image: ghcr.io/alexandreroman/scg-workshop-resiliency-time
           imagePullPolicy: IfNotPresent
           resources:
             requests:
@@ -115,7 +115,7 @@ spec:
     spec:
       containers:
         - name: time-v2
-          image: alexandreroman/scg-workshop-resiliency-time
+          image: ghcr.io/alexandreroman/scg-workshop-resiliency-time
           imagePullPolicy: IfNotPresent
           resources:
             requests:

@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: customers
-          image: alexandreroman/scg-workshop-security-customers
+          image: ghcr.io/alexandreroman/scg-workshop-security-customers
           imagePullPolicy: IfNotPresent
           resources:
             requests:
@@ -64,7 +64,7 @@ spec:
     spec:
       containers:
         - name: items
-          image: alexandreroman/scg-workshop-security-items
+          image: ghcr.io/alexandreroman/scg-workshop-security-items
           imagePullPolicy: IfNotPresent
           resources:
             requests:
@@ -113,7 +113,7 @@ spec:
     spec:
       containers:
         - name: customers
-          image: alexandreroman/scg-workshop-security-orders
+          image: ghcr.io/alexandreroman/scg-workshop-security-orders
           imagePullPolicy: IfNotPresent
           resources:
             requests:
@@ -162,7 +162,7 @@ spec:
     spec:
       containers:
         - name: customers
-          image: alexandreroman/scg-workshop-security-uaa
+          image: ghcr.io/alexandreroman/scg-workshop-security-uaa
           imagePullPolicy: IfNotPresent
           resources:
             requests:

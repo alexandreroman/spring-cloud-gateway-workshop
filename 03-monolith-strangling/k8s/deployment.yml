@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: hrapp
-          image: alexandreroman/scg-workshop-monolith-hrapp
+          image: ghcr.io/alexandreroman/scg-workshop-monolith-hrapp
           imagePullPolicy: IfNotPresent
           resources:
             requests:
@@ -54,7 +54,7 @@ spec:
     spec:
       containers:
         - name: people
-          image: alexandreroman/scg-workshop-monolith-people
+          image: ghcr.io/alexandreroman/scg-workshop-monolith-people
           imagePullPolicy: IfNotPresent
           resources:
             requests:

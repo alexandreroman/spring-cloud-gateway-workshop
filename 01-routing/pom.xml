@@ -15,7 +15,7 @@
     <name>Routing - Parent</name>
 
     <properties>
-        <image.prefix>alexandreroman</image.prefix>
+        <image.prefix>ghcr.io/alexandreroman</image.prefix>
     </properties>
 
     <modules>

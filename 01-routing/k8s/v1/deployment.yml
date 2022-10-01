@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: adder
-          image: alexandreroman/scg-workshop-routing-adder
+          image: ghcr.io/alexandreroman/scg-workshop-routing-adder
           imagePullPolicy: IfNotPresent
           resources:
             requests:
@@ -64,7 +64,7 @@ spec:
     spec:
       containers:
         - name: greetings
-          image: alexandreroman/scg-workshop-routing-greetings
+          image: ghcr.io/alexandreroman/scg-workshop-routing-greetings
           imagePullPolicy: IfNotPresent
           resources:
             requests:
